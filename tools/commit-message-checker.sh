@@ -22,12 +22,12 @@ pattern="^(([A-Z]{2,}\d?-\d+)|hotfix)"
 commit_messages=$(git log --pretty=format:%s $destination_branch..$source_branch)
 
 exit_code=0
-echo "$commit_messages" | while read line ; do
-	if echo "$line" | grep -v -q -E "$pattern"; then
+while read line ; do
+	if echo "$line" | grep -v -q -P "$pattern"; then
 		echo "--- ERROR -- Commit message does not match criteria: $line"
 		# Defer termination to allow every line to spit out the message
 		exit_code=1
 	fi
-done
+done < <(echo "$commit_messages")
 
-exit $exit_code
+exit "$exit_code"
