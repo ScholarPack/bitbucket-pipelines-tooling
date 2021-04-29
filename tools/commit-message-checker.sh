@@ -12,7 +12,7 @@ fi
 
 source_branch=$1
 destination_branch=$2
-pattern="^(([A-Z]{2,}\d?-\d+)|hotfix)"
+pattern="^([A-Z]{2,}\d?-\d+|Merge|Revert|[Hh]otfix)"
 
 # Arg checking
 [ -z "$source_branch" ] && echo "Missing source branch" && exit 1
@@ -23,7 +23,7 @@ commit_messages=$(git log --pretty=format:%s $destination_branch..$source_branch
 
 exit_code=0
 while read line ; do
-	if echo "$line" | grep -v -q -P "$pattern"; then
+	if echo "$line" | grep --invert-match --perl-regexp --quiet "$pattern"; then
 		echo "--- ERROR -- Commit message does not match criteria: $line"
 		# Defer termination to allow every line to spit out the message
 		exit_code=1
