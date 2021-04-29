@@ -1,15 +1,5 @@
 #!/bin/bash
 filename=$0
-expected_check=$3
-
-# Compute checksum
-this_file_check="$(shasum -a 512 $filename | cut -d " " -f 1 )"
-if [[ "$this_file_check" != "$expected_check" ]]; then
-	echo "---DANGER --- Checksums do not match!"
-	echo "Expected $expected_check got $this_file_check"
-	exit 1
-fi
-
 source_branch=$1
 destination_branch=$2
 pattern="^([A-Z]{2,}\d?-\d+|Merge|Revert|[Hh]otfix)"
